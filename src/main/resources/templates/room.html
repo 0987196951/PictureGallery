@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+		<link rel="stylesheet" th:href=@{/styles.css}>
+		<title>Login</title>
+	</head>
+	<body>
+		<header class="header">
+	        <div style="flex-grow: 3;">
+	            <img th:src="@{/images/thầy mù ba ga.jpg}" alt="logo" style="width: 100px;">
+	        </div>
+	        <div style="flex-grow: 7;">
+	            <h1 style="text-align: center;">Storage</h1>
+	        </div>
+	        <div style="flex-grow: 2;">
+		         <button onclick="showForm('form_add_pic')">
+		              <span class="material-symbols-outlined">add</span>
+		         </button>
+	        </div>
+	        <div style="flex-grow: 2">
+	            <h3 th:text="${room.name}" style="text-align: center;">Room Name</h3>
+	        </div>
+	    </header>
+		<form th:action="@{/room/add_picture}" method="POST" class="form-add" id="form_add_pic" th:object="${picture}" enctype="multipart/form-data">
+	        <div class="row">
+	            <div class="row-15" style="width: 30%;">
+	                <label for="file">Choose File : </label>
+	            </div>
+	            <div class="row-85" style="width: 70%;">
+	                <input type="file" name="multipartFile">
+	            </div>
+	        </div>
+	        <br>
+	        <div class="row">
+	            <div class="row-15">
+	                <label for="description">Description : </label>
+	            </div>
+	            <div class="row-85">
+	                <textarea name="description" cols="30" rows="10" th:field="*{description}"></textarea>
+	            </div>
+	        </div>
+	        <div class="row">
+	        	<div>
+	            	<input type="submit" value="Add">
+	            </div>
+	        </div>
+	   </form>
+       <article class="grid-container">
+            <div class="grid-item" th:each="picture : ${pictures}">
+            	<div class="card">
+            		<a th:href="${picture.path}"><img th:alt="${picture.description}" th:src="${picture.path}" /></a>
+            	</div>
+            	<div class="desc">
+            		<p th:text="${picture.description}">
+            	</div>
+            	<div>
+            		<a th:href="@{/room/del/__${picture.picID}__}"><button> Delete</button></a>
+            	</div>
+            </div>
+       	</article>
+       	<script type="text/javascript">
+       		function showForm(form){
+    			document.getElementById(form).style.display = "block";	
+    		}
+       	</script>
+	</body>
+</html>

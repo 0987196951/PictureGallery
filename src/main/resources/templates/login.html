@@ -1,0 +1,43 @@
+0
+<!DOCTYPE html>
+	<html xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" th:href=@{/styles.css}>
+		<title>Login</title>
+	</head>
+	<body>
+		<h1>Login to Gallery</h1>
+		<div>
+			<form class="login" th:action="@{/login}" method="POST"
+				th:object="${user}">
+				<div class="row">
+					<div class="row-25">
+						<label for="username">Username : </label>
+					</div>
+					<div class="row-75">
+						<input type="text" name="username" th:value="${user.username}">
+					</div>
+				</div>
+				<div class="row">
+					<div class="row-25">
+						<label for="password">Password : </label>
+					</div>
+					<div class="row-75">
+						<input type="password" name="password" th:value="${user.password}">
+					</div>
+				</div>
+				<div class="btn-login">
+					<input type="submit" value="Login">
+				</div>
+	
+			</form>
+			<form class="sign-up" th:action="@{/sign_up}" method="GET">
+				<input type="submit" value="Sign up">
+			</form>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/styles.css}">
+    <script src="https://kit.fontawesome.com/095d206ceb.js" crossorigin="anonymous"></script>  
+    <title>Store</title>
+</head>
+<body>
+
+    <header class="header">
+        <div style="flex-grow: 2">
+            <img th:src="@{/images/thầy mù ba ga.jpg}" alt="logo" style="width: 100px;">
+        </div>
+        <div style="flex-grow: 4">
+            <h1 style="text-align: center;">Storage</h1>
+        </div>
+        <div style="flex-grow: 2">
+            <h3 th:text="${user.username}" style="text-align: center;">User Name</h3>
+        </div>
+    </header>
+<!--    <form th:action="@{/add_picture}" method="POST" class="form-add" id="form_add_pic" th:object="${picture}">
+        <div class="row">
+            <div class="row-15" style="width: 30%;">
+                <label for="file">Choose File : </label>
+            </div>
+            <div class="row-85" style="width: 70%;">
+                <input type="file" name="filePath">
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="row-15">
+                <label for="description">Description : </label>
+            </div>
+            <div class="row-85">
+                <textarea name="description" cols="30" rows="10" th:values="${picture.description}"></textarea>
+            </div>
+        </div>
+        <div class="row">
+        	<div>
+            	<input type="submit" value="Add">
+            </div>
+        </div>
+    </form>
+-->
+	<form th:action="@{/store/add_room}" method="POST" class="form-add" id="form_add_room" th:object="${room}">
+        <div class="row">
+            <div class="row-15">
+                <label for="name">Name : </label>
+            </div>
+            <div class="row-85">
+                <input type="text" name="name" th:field="*{name}">
+            </div>
+        </div>
+        <div class="row">
+        	<div class="row-15">
+        		<label for="password">Password :</label>
+        	</div>
+        	<div class="row-85">
+        		<input type="password" name="password" th:field="*{password}">
+        	</div>
+        </div>
+        <div class="row">
+        	<div>
+            	<input type="submit" value="Add">
+            </div>
+        </div>
+    </form>
+    <form th:action="@{/store/access_room}" method="POST" class="form-add" id="form_access_room" th:object="${room}">
+    	<div class="row"><h2 th:text="${room.name}" id="room_name_form">Room</h2></div>
+    	<div class="row">
+    		<input type="hidden" th:field="*{roomID}" id="room_id_form">
+    		<label for="password">Password </label>
+    		<input type="password" th:field="*{password}" id="room_password_form" autocomplete="off">
+    		<input type="submit" value="Access"> 
+    	</div>	
+    </form>
+    <section>
+        <nav class="nav">
+            <div class="gallery" style="flex-grow: 2" ><h1>My gallery</h1></div>
+            <div class="flex">
+	            <div class="add-pic" style="flex-grow: 2">
+		                <button onclick="showForm('form_add_room')">
+		                    <i class="fa-solid fa-address-card"></i>
+		                </button>
+	            </div>
+	            <div style="flex-grow: 2">
+	            	<div>
+	            		<form th:action="@{/store/search_room}" th:object ="${room}" method="POST">
+							<label for="roomID">Room Name : </label>	            		
+	            			<input type="text" name="name" th:field="*{name}">
+	            			<input type="submit" value="search">
+	            		</form>
+	            	</div>
+	            </div>
+            </div>
+        </nav>
+        <article class="grid-container">
+	            <div class="gird_item" th:each="room : ${rooms}">
+	            	<div class="card_room" style= "margin : 30px;">
+	            		<button th:text="${room.name}" 
+	            			th:attr="onclick=|showFormEnterPasswordRoom('${room.roomID}' , '${room.name}')|"></button>	
+	            	</div>
+	            </div>
+        </article>
+<!--        <article class="grid-container">
+	            <div class="gird_item" th:each="picture : ${pictures}">
+	            	<div class="card">
+	            		<img alt="${picture.desc}" src="${picture.path}">
+	            	</div>
+	            	<div class="desc">
+	            		<p th:text=${picture.description}>
+	            	</div>
+	            </div>
+        	</article>  
+-->
+    </section>
+    <script>
+    	function showForm(form){
+    		document.getElementById(form).style.display = "block";
+    		
+    	}
+    	function showFormEnterPasswordRoom(roomID, roomName) {
+    		document.getElementById("room_name_form").innerHTML = roomName;
+    		document.getElementById("room_id_form").value = roomID;
+    		showForm('form_access_room');
+    	}
+    	function showOffForm(form){
+    		document.getElementById(form).style.display = "none";
+ 		}
+ 		function show(isShow, form){
+ 			if (isShow === "True"){
+ 				showForm(form);
+ 			}
+ 			else {
+ 				showOffForm(form);
+ 			}
+ 		}
+    </script>
+</body>
+</html>
