@@ -34,7 +34,7 @@ public class SignUpController {
 		if(checkedUser == null) {
 			log.info("save user");
 			jdbcUser.save(user);
-			return "store";
+			return "redirect:/login";
 		}
 		else {
 			return "sign_up";

@@ -49,54 +49,35 @@ public class StoreController {
 	public String displayStore( Model model, HttpSession session) {
 		User user = (User) session.getAttribute("user");
 		log.info(user.getUserID());
-		List<Room> listRoom = jdbcRoom.findAllwithUser(user.getUserID());
-		this.list = (ArrayList<Room>) listRoom;
-		model.addAttribute("rooms", listRoom);
+		if(list.size() == 0) {
+			List<Room> listRoom = jdbcRoom.findAllwithUser(user.getUserID());
+			this.list = (ArrayList<Room>) listRoom;			
+		}
+		model.addAttribute("rooms", this.list);
 		model.addAttribute("user", user);
 		model.addAttribute("room", new Room());
 		return "store";	
-	}
-	@GetMapping("/add_picture")
-	public String addPictrue(Model model) {
-		model.addAttribute("picture", new Picture());
-		return "store";
-	}
-	@PostMapping("/add_picture")
-	public String addPicture() {
-		return "store";
 	}
 	@PostMapping("/add_room")
 	public String addRoom(Room room, Model model, HttpSession session) {
 		User user = (User) session.getAttribute("user");
 		log.info(user.getUserID());
 		this.list.add(jdbcRoom.addRoom(room, user.getUserID()));
-		model.addAttribute("rooms", list);
-		model.addAttribute("user", user);
-		model.addAttribute("room", new Room());
-		return "store";
+		return "redirect:/store/current";
 	}
 	@PostMapping("/access_room")
 	public String accessRoom(Room room, Model model, HttpSession session, HttpServletRequest request) {
 		Room gettedRoom = jdbcRoom.isRoom(room);
 		log.info(room.toString());
 		if(gettedRoom != null) {
-			List<Picture> listPictures = jdbcPic.getPictureOfRoom(gettedRoom.getRoomID());
-			model.addAttribute("pictures",listPictures);
-			model.addAttribute("picture", new PicturePackage());
-			model.addAttribute("room", new Room());
-			request.getSession().setAttribute("room", room);
-			request.getSession().setAttribute("pictures", listPictures);
-			return "room";
+			request.getSession().setAttribute("room", gettedRoom);
+			return "redirect:/room/current";
 		}
-		model.addAttribute(session.getAttribute("user"));
-		model.addAttribute("rooms", list);
-		model.addAttribute("room", new Room());
-		return "store";
+		return "redirect:/store/current";
 	}
 	@PostMapping("/search_room")
 	public String searchRoom(Room room, Model model, HttpSession session, HttpServletRequest request) {
 		List<Room> listRoom = jdbcRoom.findByName(room.getName());
-		this.list = (ArrayList<Room>) listRoom;
 		User user = (User) session.getAttribute("user");
 		model.addAttribute("rooms", listRoom);
 		model.addAttribute("user", user);

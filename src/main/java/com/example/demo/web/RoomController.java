@@ -33,7 +33,13 @@ public class RoomController {
 	}
 	@GetMapping("/current")
 	public String showRoom(Model model, HttpSession session, HttpServletRequest request) {
-		
+		Room room = (Room) session.getAttribute("room");
+		@SuppressWarnings("unchecked")
+		List<Picture> listPictures = (List<Picture>) session.getAttribute("pictures");
+		request.setAttribute("pictures", listPictures);
+		model.addAttribute("pictures", listPictures);
+		model.addAttribute("room", room);
+		model.addAttribute("picture", new PicturePackage());
 		return "room";
 	}
 	@PostMapping("/add_picture")
@@ -43,13 +49,9 @@ public class RoomController {
 		Picture savedPic = jdbcPicture.save(picturePackage, room.getRoomID());
 		@SuppressWarnings("unchecked")
 		List<Picture> listPictures = (List<Picture>) session.getAttribute("pictures");
-		log.info(listPictures.toString());
 		listPictures.add(savedPic);
-		request.setAttribute("pictures", listPictures);
-		model.addAttribute("pictures", listPictures);
-		model.addAttribute("room", room);
-		model.addAttribute("picture", new PicturePackage());
-		return "room";
+		request.getSession().setAttribute("pictures", listPictures);
+		return "redirect:/room/current";
 	}
 	@GetMapping("/del/{id}")
 	public String delPicture(@PathVariable("id") String pictureId,Model model,
@@ -64,10 +66,7 @@ public class RoomController {
 				break;
 			}
 		}
-		request.setAttribute("pictures", listPictures);
-		model.addAttribute("pictures",listPictures);
-		model.addAttribute("room", room);
-		model.addAttribute("picture", new PicturePackage());
-		return "room";
+		request.getSession().setAttribute("pictures", listPictures);
+		return "redirect:/room/current";
 	}
 }
