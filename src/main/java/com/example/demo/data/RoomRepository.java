@@ -11,4 +11,5 @@ public interface RoomRepository {
 	public Room addRoom(Room room, String userID);
 	public Room isRoom(Room room);
 	public List<Room> findByName(String name);
+	public void addAccess(String userId, String roomId);
 }

@@ -36,7 +36,10 @@ public class RoomController {
 		Room room = (Room) session.getAttribute("room");
 		@SuppressWarnings("unchecked")
 		List<Picture> listPictures = (List<Picture>) session.getAttribute("pictures");
-		request.setAttribute("pictures", listPictures);
+		if(listPictures == null) {
+			listPictures = jdbcPicture.getPictureOfRoom(room.getRoomID());
+			session.setAttribute("pictures", listPictures);
+		}
 		model.addAttribute("pictures", listPictures);
 		model.addAttribute("room", room);
 		model.addAttribute("picture", new PicturePackage());

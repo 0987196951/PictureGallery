@@ -38,7 +38,6 @@ public class StoreController {
 	private JdbcPictureRepository jdbcPicture;
 	private JdbcRoomRepository jdbcRoom;
 	private JdbcPictureRepository jdbcPic;
-	private ArrayList<Room> list = new ArrayList<Room>();
 	@Autowired
 	public StoreController(JdbcPictureRepository jdbcPicture, JdbcRoomRepository jdbcRoom, JdbcPictureRepository jdbcPic) {
 		this.jdbcPicture = jdbcPicture;
@@ -49,11 +48,10 @@ public class StoreController {
 	public String displayStore( Model model, HttpSession session) {
 		User user = (User) session.getAttribute("user");
 		log.info(user.getUserID());
-		if(list.size() == 0) {
-			List<Room> listRoom = jdbcRoom.findAllwithUser(user.getUserID());
-			this.list = (ArrayList<Room>) listRoom;			
-		}
-		model.addAttribute("rooms", this.list);
+		List<Room> listRoom = jdbcRoom.findAllwithUser(user.getUserID());
+		String msg = (String) session.getAttribute("msg");
+		model.addAttribute("msg", msg);
+		model.addAttribute("rooms", listRoom);
 		model.addAttribute("user", user);
 		model.addAttribute("room", new Room());
 		return "store";	
@@ -62,17 +60,27 @@ public class StoreController {
 	public String addRoom(Room room, Model model, HttpSession session) {
 		User user = (User) session.getAttribute("user");
 		log.info(user.getUserID());
-		this.list.add(jdbcRoom.addRoom(room, user.getUserID()));
+		Room gettedRoom = jdbcRoom.addRoom(room, user.getUserID());
+		if(gettedRoom != null) {
+			session.setAttribute("msg", "add room sucessfully");
+			session.setAttribute("gettedRoom", gettedRoom);
+		}
+		else {
+			session.setAttribute("msg", "room is existed");
+		}
 		return "redirect:/store/current";
 	}
 	@PostMapping("/access_room")
 	public String accessRoom(Room room, Model model, HttpSession session, HttpServletRequest request) {
+		User user = (User)session.getAttribute("user");
 		Room gettedRoom = jdbcRoom.isRoom(room);
-		log.info(room.toString());
 		if(gettedRoom != null) {
-			request.getSession().setAttribute("room", gettedRoom);
+			jdbcRoom.addAccess(user.getUserID(),room.getRoomID());
+			session.setAttribute("room", gettedRoom);
+			session.setAttribute("msg", "");
 			return "redirect:/room/current";
 		}
+		session.setAttribute("msg", "password wrong");
 		return "redirect:/store/current";
 	}
 	@PostMapping("/search_room")

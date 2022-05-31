@@ -53,16 +53,14 @@ public class JdbcRoomRepository implements RoomRepository{
 		UUID uuid = UUID.randomUUID();
 		room.setRoomID(uuid.toString());
 		room.setCreatedDay(new Date());
+		Room checkRoom = null;
 		try {
-			Room checkRoom = jdbc.queryForObject("select * from tblRoom where name = ?",
+			checkRoom = jdbc.queryForObject("select * from tblRoom where name = ?",
 					this::mapRowToRoom, room.getName());
 		}catch(EmptyResultDataAccessException e) {
-			
-		}
-		finally {
 			save(room, userID);
 		}
-		return room;
+		return checkRoom==null?room:null;
 	}
 	private void save(Room room, String userID) {
 		jdbc.update("insert into tblroom(roomID, name, password, createdDay) values (?, ?, ?, ?)",
@@ -88,5 +86,13 @@ public class JdbcRoomRepository implements RoomRepository{
 				this::mapRowToRoom, name));
 		listRoom.sort(null);
 		return listRoom;
+	}
+	@Override
+	public void addAccess(String userId, String roomId) {
+		try {
+			jdbc.update("insert into tbluser_tblroom(userID, roomID) values(?, ?)", userId, roomId);
+		}catch(Exception e) {
+			
+		}
 	}
 }

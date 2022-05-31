@@ -1,4 +1,3 @@
-0
 <!DOCTYPE html>
 	<html xmlns="http://www.w3.org/1999/xhtml"
 		xmlns:th="http://www.thymeleaf.org">
@@ -10,6 +9,7 @@
 		<title>Login</title>
 	</head>
 	<body>
+		<div><p th:text="${msg}"></p></div>
 		<h1>Login to Gallery</h1>
 		<div>
 			<form class="login" th:action="@{/login}" method="POST"

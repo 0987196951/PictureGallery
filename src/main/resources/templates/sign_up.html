@@ -9,6 +9,7 @@
     <title>sign up</title>
 </head>
 <body>
+	<div><p th:text="${msg}"></p></div>
     <div>
         <form th:action="@{/sign_up}" th:object="${user}" method="POST">
             <div class="row">

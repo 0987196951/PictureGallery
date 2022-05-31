@@ -1,14 +1,17 @@
 package com.example.demo;
 
+import java.io.Serializable;
 import java.util.Date;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Room implements Comparable<Room> {
+public class Room implements Comparable<Room>, Serializable {
 	private String roomID;
 	private String name;
 	private String password;

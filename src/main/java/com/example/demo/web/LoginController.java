@@ -45,14 +45,15 @@ public class LoginController {
 		return "login";
 	}
 	@PostMapping
-	public String processLogin( User user,  Errors errors, HttpServletRequest request) throws ServletException, IOException {
+	public String processLogin( User user,Model model,  Errors errors, HttpServletRequest request) throws ServletException, IOException {
 		User gettedUser = userJdbc.isRightUser(user);
-		request.getSession().setAttribute("user", gettedUser);
-		log.info("getted User " + gettedUser.getUserID());
 		if(gettedUser != null) {
+			request.getSession().setAttribute("user", gettedUser);
 			return "redirect:/store/current";
 		}
 		else {
+			model.addAttribute("user", user);
+			model.addAttribute("msg", "Not exist this user");
 			log.info("Not exist this user");
 			return "login";
 		}

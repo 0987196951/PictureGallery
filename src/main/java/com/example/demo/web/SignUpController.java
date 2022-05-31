@@ -29,14 +29,17 @@ public class SignUpController {
 		return "sign_up";
 	}
 	@PostMapping
-	public String createUser(User user) {
+	public String createUser(User user, Model model) {
 		User checkedUser = jdbcUser.isRightUser(user);
 		if(checkedUser == null) {
 			log.info("save user");
 			jdbcUser.save(user);
-			return "redirect:/login";
+			model.addAttribute("msg", "sign up sucessfully");
+			model.addAttribute("user", user);
+			return "login";
 		}
 		else {
+			model.addAttribute("msg", "user is existed");
 			return "sign_up";
 		}
 	}
